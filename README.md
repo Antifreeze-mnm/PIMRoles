@@ -27,6 +27,8 @@ The **Clear Selections** button clears all fields on the form.
 The loading screen uses the Function provided by Mentaleak - Zachary Fischer
 *Ref* [Loading Screen](https://github.com/VitalProject/Show-LoadingScreen)
 
+![image](https://github.com/user-attachments/assets/7342f876-1e24-4501-a9ba-bb822f1c70ec)
+
 To run the Activate-PIMRole.0.6.ps1 script, you need to ensure that you have the following requirements met:
 
 ### Requirements
