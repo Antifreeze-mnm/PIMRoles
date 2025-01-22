@@ -1,4 +1,4 @@
-# PIMRoles
+#PIM Role Activation 0.5
 
 This script attempts to provide a wrapper around the activation of PIM Roles.
 
@@ -16,4 +16,13 @@ If a PIM Role is already activated it will be greyed out in the form.
 
 ![image](https://github.com/user-attachments/assets/a5b98fc2-f91e-4fa5-ba41-d4fd270a8c0b)
 
-With every run of the script a History file is maintained at `"$env:USERPROFILE\Documents\PIMRoleSelections.json"`
+With every run of the script a History file is maintained at `$env:USERPROFILE\Documents\PIMRoleSelections.json`.
+
+The History can be selected in the Previous Selections drop down box. When the user selects
+a previous PIM Role activation, all the Roles that were selected, the Reason and the Duration
+are all populated on the form.
+
+The Clear Selection button clears all fields on the form.
+
+The loading screen uses the Function provided by Mentaleak - Zachary Fischer
+Ref [Loading Screen](https://github.com/VitalProject/Show-LoadingScreen)
