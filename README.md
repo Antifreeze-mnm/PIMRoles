@@ -30,14 +30,19 @@ The loading screen uses the Function provided by Mentaleak - Zachary Fischer
 To run the Activate-PIMRole.0.6.ps1 script, you need to ensure that you have the following requirements met:
 
 Requirements
-PowerShell Version: Ensure you are running PowerShell 5.1 or later. You can check your PowerShell version by running:
-`$PSVersionTable.PSVersion`
-Microsoft Graph PowerShell SDK: Install the Microsoft Graph PowerShell SDK to interact with Azure AD and PIM. You can install it using:
-`Install-Module Microsoft.Graph -Scope CurrentUser`
-Permissions: Ensure you have the necessary permissions to read and manage roles in Azure AD. You will need the following scopes:
 
+PowerShell Version: Ensure you are running PowerShell 5.1 or later.
+You can check your PowerShell version by running:
+`$PSVersionTable.PSVersion`
+Microsoft Graph PowerShell SDK: Install the Microsoft Graph PowerShell SDK to interact with Azure AD and PIM.
+You can install it using:
+`Install-Module Microsoft.Graph -Scope CurrentUser`
+
+Permissions: Ensure you have the necessary permissions to read and manage roles in Azure AD.
+You will need the following scopes:
 - RoleManagement.Read.Directory
 - RoleManagement.ReadWrite.Directory
+
 Internet Access: Ensure you have internet access to connect to Microsoft Graph.
 
 PresentationFramework Assembly: Ensure the PresentationFramework assembly is available for creating and displaying the loading screen.
