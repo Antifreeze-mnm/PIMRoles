@@ -1,4 +1,4 @@
-#PIM Role Activation 0.5
+###PIM Role Activation 0.5
 
 This script attempts to provide a wrapper around the activation of PIM Roles.
 
