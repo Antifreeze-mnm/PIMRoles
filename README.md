@@ -29,9 +29,9 @@ The loading screen uses the Function provided by Mentaleak - Zachary Fischer
 
 ![image](https://github.com/user-attachments/assets/7342f876-1e24-4501-a9ba-bb822f1c70ec)
 
-To run the Activate-PIMRole.0.5.ps1 script, you need to ensure that you have the following requirements met:
-
 ### Requirements
+
+To run the Activate-PIMRole.0.5.ps1 script, you need to ensure that you have the following requirements met:
 
 **PowerShell Version:** Ensure you are running PowerShell 5.1 or later.
 You can check your PowerShell version by running:
