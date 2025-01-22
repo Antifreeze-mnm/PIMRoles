@@ -34,6 +34,7 @@ To run the Activate-PIMRole.0.6.ps1 script, you need to ensure that you have the
 **PowerShell Version:** Ensure you are running PowerShell 5.1 or later.
 You can check your PowerShell version by running:
 `$PSVersionTable.PSVersion`
+
 **Microsoft Graph PowerShell SDK:** Install the Microsoft Graph PowerShell SDK to interact with Azure AD and PIM.
 You can install it using:
 `Install-Module Microsoft.Graph -Scope CurrentUser`
