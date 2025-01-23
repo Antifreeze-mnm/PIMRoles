@@ -14,20 +14,19 @@
         None
 
     .REFERENCES
-        - GitHub:   https://github.com/DanielChronlund/DCToolbox
+        - GitHub:   https://github.com/VitalProject/Show-LoadingScreen/
+
 #>
 
 #region script change log
 # originally written by Mark Jackson
 #
-# Version 1.0 - Released Jan 2025
+# Version 0.5 - Released Jan 2025
 #endregion
 
 (New-Object System.Net.WebClient).Proxy.Credentials = [System.Net.CredentialCache]::DefaultNetworkCredentials
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 Add-Type -AssemblyName PresentationFramework
-
-# https://github.com/VitalProject/Show-LoadingScreen/
 Add-Type -AssemblyName System.Windows.Forms
 [System.Windows.Forms.Application]::EnableVisualStyles()
 
