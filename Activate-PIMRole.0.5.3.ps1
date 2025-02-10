@@ -1,4 +1,4 @@
-<# Filename: 		Activate-PIMRole.0.5.2.ps1
+<# Filename: 		Activate-PIMRole.0.5.3.ps1
     =============================================================================
     .SYNOPSIS
         Activate an Azure AD Privileged Identity Management (PIM) role with PowerShell.
@@ -25,6 +25,7 @@
 #         0.5.1 - Bug fix: Added User.read permission to the Graph API call
 #         0.5.2 - Bug fix: remove numbers in output & fixed issue with repeated entries on the form
 #                 when selecting previous history with a duplicate reason
+#         0.5.3 - Fixed activation message duration to end time in hh:mm tt format
 #endregion
 
 (New-Object System.Net.WebClient).Proxy.Credentials = [System.Net.CredentialCache]::DefaultNetworkCredentials
@@ -306,6 +307,10 @@ catch {
 # Handle selection to prevent selecting unselectable items
 $RoleListBox.Add_SelectionChanged({
         $SelectedItems = @($RoleListBox.SelectedItems)
+        # Concatenate the display names of the selected roles
+        $selectedRoles = $selectedItems | ForEach-Object { $_.DisplayName }
+        # Update the SelectedRolesTextBlock
+        $SelectedRolesTextBlock.Text = $selectedRoles
         foreach ($item in $SelectedItems) {
             if (-not $item.IsSelectable) {
                 $RoleListBox.SelectedItems.Remove($item)
@@ -424,7 +429,7 @@ $ActivateButton.Add_Click({
                 ScheduleInfo     = $Schedule
             }
 
-            #New-MgRoleManagementDirectoryRoleAssignmentScheduleRequest -BodyParameter $params | Out-Null
+            New-MgRoleManagementDirectoryRoleAssignmentScheduleRequest -BodyParameter $params | Out-Null
             # Calculate the expiration time in UTC
             $startDateTimeUtc = [datetime]::Parse($Schedule.StartDateTime)
             $expirationTimeUtc = $startDateTimeUtc.AddHours($Duration)
