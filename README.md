@@ -1,5 +1,7 @@
 # PIM Role Activation
 
+Current Stable Release: 0.5.3
+
 This script attempts to provide a wrapper around the activation of PIM Roles.
 
 It presents the user with the PIM Roles available to them to activate. They can select one
