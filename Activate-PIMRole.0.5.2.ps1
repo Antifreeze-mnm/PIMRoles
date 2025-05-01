@@ -414,17 +414,19 @@ $ActivateButton.Add_Click({
                 }
             }
 
+            $DirectoryScopeID = get-mgorganization | Select-Object -ExpandProperty Id
+
             # Setup parameters for activation
             $params = @{
                 Action           = "selfActivate"
                 PrincipalId      = $CurrentAccountId
                 RoleDefinitionId = $SelectedRole.RoleDefinitionId
-                DirectoryScopeId = "/"
+                DirectoryScopeId = $DirectoryScopeID
                 Justification    = $Reason
                 ScheduleInfo     = $Schedule
             }
 
-            #New-MgRoleManagementDirectoryRoleAssignmentScheduleRequest -BodyParameter $params | Out-Null
+            New-MgRoleManagementDirectoryRoleAssignmentScheduleRequest -BodyParameter $params | Out-Null
             # Calculate the expiration time in UTC
             $startDateTimeUtc = [datetime]::Parse($Schedule.StartDateTime)
             $expirationTimeUtc = $startDateTimeUtc.AddHours($Duration)
