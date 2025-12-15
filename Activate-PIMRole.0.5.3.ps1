@@ -433,7 +433,8 @@ $ActivateButton.Add_Click({
 
             New-MgRoleManagementDirectoryRoleAssignmentScheduleRequest -BodyParameter $params -verbose | Out-Null
             # Calculate the expiration time in UTC
-            $startDateTimeUtc = [datetime]::Parse($Schedule.StartDateTime)
+            #$startDateTimeUtc = [datetime]::Parse($Schedule.StartDateTime)
+            $startDateTimeUtc = $Schedule.StartDateTime
             $expirationTimeUtc = $startDateTimeUtc.AddHours($Duration)
             # Convert the expiration time to local time
             $expirationTimeLocal = $expirationTimeUtc.ToLocalTime()

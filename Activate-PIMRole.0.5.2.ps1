@@ -235,6 +235,7 @@ $ClearButton = $window.FindName("ClearButton")
 #region Generate Roles
 # Connect to Microsoft Graph using device code authentication
 Connect-MgGraph -Scopes "RoleManagement.Read.Directory", "RoleManagement.ReadWrite.Directory", "User.Read" -UseDeviceAuthentication -NoWelcome
+#Connect-MgGraph -Scopes "RoleManagement.Read.Directory", "RoleManagement.ReadWrite.Directory", "User.Read"
 
 # Get the current user's ID
 $CurrentAccountId = (Get-AzContext).Account.Id
@@ -428,7 +429,8 @@ $ActivateButton.Add_Click({
 
             New-MgRoleManagementDirectoryRoleAssignmentScheduleRequest -BodyParameter $params | Out-Null
             # Calculate the expiration time in UTC
-            $startDateTimeUtc = [datetime]::Parse($Schedule.StartDateTime)
+            #$startDateTimeUtc = [datetime]::Parse($Schedule.StartDateTime)
+            $startDateTimeUtc = $Schedule.StartDateTime
             $expirationTimeUtc = $startDateTimeUtc.AddHours($Duration)
             # Convert the expiration time to local time
             $expirationTimeLocal = $expirationTimeUtc.ToLocalTime()
