@@ -341,6 +341,7 @@ $RoleListBox.Add_SelectionChanged({
                 [System.Windows.MessageBox]::Show("The role '$($item.DisplayName)' is already activated and cannot be selected.")
             }
         }
+        $SelectedRolesTextBlock.Text = ($RoleListBox.SelectedItems.DisplayName) -join ", "
     })
 
 # Handle the SelectionChanged event
