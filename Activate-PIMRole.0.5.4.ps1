@@ -26,6 +26,7 @@
 #         0.5.2 - Bug fix: remove numbers in output & fixed issue with repeated entries on the form
 #                 when selecting previous history with a duplicate reason
 #         0.5.3 - Bug fix: removed Connect-MgGraph from main script to allow integrated auth to work
+#         0.5.4 - Feature: added authentication method selection Browser vs Device Code
 #endregion
 
 (New-Object System.Net.WebClient).Proxy.Credentials = [System.Net.CredentialCache]::DefaultNetworkCredentials
@@ -280,7 +281,7 @@ $loadingWindow = show-LoadingScreen
 [xml]$xaml = @"
 <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="PIM Role Activation 0.5" Height="540" Width="600">
+        Title="PIM Role Activation 0.5.4" Height="540" Width="600">
     <Window.Resources>
         <DataTemplate x:Key="ListBoxItemTemplate">
             <TextBlock Text="{Binding DisplayName}" Foreground="{Binding Foreground}" />
@@ -344,21 +345,30 @@ try {
             "RoleManagement.ReadWrite.Directory"
             "User.Read"
         )
-
+        $ConnectParameters = @{
+            Scopes       = $GraphScopes
+            ContextScope = "Process"
+            NoWelcome    = $true
+        }
         if ($AuthenticationMethod -eq "DeviceCode") {
-
             Write-Host "Using Device Code authentication..." -ForegroundColor Yellow
-
-            Connect-MgGraph `
-                -Scopes $GraphScopes `
-                -UseDeviceCode
+            Set-MgGraphOption -DisableLoginByWAM $true
+            Connect-MgGraph @ConnectParameters -UseDeviceCode
         }
         else {
-
             Write-Host "Using Browser authentication..." -ForegroundColor Yellow
+            Connect-MgGraph @ConnectParameters
+        }
+        try {
+            $CurrentUser = Get-MgUser -UserId (Get-MgContext).Account -ErrorAction Stop
 
-            Connect-MgGraph `
-                -Scopes $GraphScopes
+            Write-Host ""
+            Write-Host "Connected as: $($CurrentUser.DisplayName)" -ForegroundColor Green
+            Write-Host "UPN         : $($CurrentUser.UserPrincipalName)" -ForegroundColor Green
+            Write-Host ""
+        }
+        catch {
+            throw "Authentication succeeded but Graph queries failed: $($_.Exception.Message)"
         }
     }
 
