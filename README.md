@@ -1,57 +1,266 @@
 # PIM Role Activation
 
-Current Stable Release: 0.5.3
+**Current Stable Release:** 0.5.4
 
-This script attempts to provide a wrapper around the activation of PIM Roles.
+## Overview
 
-It presents the user with the PIM Roles available to them to activate. They can select one
-or more roles, provide a reason and duration they want the role activated for.
+PIM Role Activation provides a graphical interface for activating Microsoft Entra Privileged Identity Management (PIM) roles.
 
-![image](https://github.com/user-attachments/assets/eeb05df7-fe2a-42e0-8362-f2ab44e4f294)
+The script discovers the PIM roles available for activation by the signed in user and presents them in an easy-to-use interface.
 
-Clicking on **Activate** will activate all the selected Roles, with the Reason and Duration
-input on the form.
-The duration is subject to the maximum allowed for a Role, so the script will adjust the
-duration for a role where this maximum is exceeded.
+Users can:
 
-If a PIM Role is already activated it will be greyed out in the form.
+- Select one or more eligible PIM roles
+- Provide an activation reason
+- Specify an activation duration
+- Reuse previous role activation selections
+- Activate multiple PIM roles in a single operation
+- Select their preferred authentication method
 
-![image](https://github.com/user-attachments/assets/a5b98fc2-f91e-4fa5-ba41-d4fd270a8c0b)
+---
 
-With every run of the script a History file is maintained at `$env:USERPROFILE\Documents\PIMRoleSelections.json`.
+## Features
 
-The History can be selected in the Previous Selections drop down box. When the user selects
-a previous PIM Role activation, all the Roles that were selected, the Reason and the Duration
-are all populated on the form.
+### Role Selection
 
-The **Clear Selections** button clears all fields on the form.
+The main interface displays all eligible PIM roles available to the signed-in account.
 
-The loading screen uses the Function provided by Mentaleak - Zachary Fischer
-*Ref* [Loading Screen](https://github.com/VitalProject/Show-LoadingScreen)
+Roles that are already active are automatically disabled and displayed as greyed out to prevent duplicate activation requests.
 
-![image](https://github.com/user-attachments/assets/7342f876-1e24-4501-a9ba-bb822f1c70ec)
+![PIM Role Activation screen](./images/PIMRoleActivation-0.5.4.png)
 
-### Requirements
+### Role Activation
 
-To run the Activate-PIMRole.0.5.ps1 script, you need to ensure that you have the following requirements met:
+Select one or more roles and provide:
 
-**PowerShell Version:** Ensure you are running PowerShell 5.1 or later.
-You can check your PowerShell version by running:
-`$PSVersionTable.PSVersion`
+- Reason
+- Duration (hours)
 
-**Microsoft Graph PowerShell SDK:** Install the Microsoft Graph PowerShell SDK to interact with Azure AD and PIM.
-You can install it using:
-`Install-Module Microsoft.Graph -Scope CurrentUser`
+Click **Activate** to submit activation requests.
 
-**Permissions:** Ensure you have the necessary permissions to read and manage roles in Azure AD.
-You will need the following scopes:
-- RoleManagement.Read.Directory
-- RoleManagement.ReadWrite.Directory
+The requested duration is automatically validated against the maximum duration permitted by the role assignment policy.
 
-**Internet Access:** Ensure you have internet access to connect to Microsoft Graph.
+If the requested duration exceeds the permitted duration, the script automatically adjusts the request to the maximum allowed value.
 
-**PresentationFramework Assembly:** Ensure the PresentationFramework assembly is available for creating and displaying the loading screen.
+---
 
-**Script Execution Policy:**
-Ensure that your script execution policy allows running scripts. You can set the execution policy using:
-`Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` 
+### Authentication Method Selection
+
+Version 0.5.4 introduces support for multiple authentication methods.
+
+When the script starts, users are prompted to choose how they would like to authenticate.
+
+#### Browser Authentication (Default)
+
+Uses the existing browser sign-in experience.
+
+Advantages:
+
+- Fastest authentication experience
+- Uses existing browser sessions
+- Recommended for most users
+
+#### Device Code Authentication
+
+Uses Microsoft device code authentication.
+
+Advantages:
+
+- Allows explicit account selection
+- Allows explicit tenant selection
+- Useful when managing multiple tenants
+- Useful when browser authentication signs into the wrong account
+
+![PIM Authentication](./images/SelectAuth.png)
+
+---
+
+### Tenant Confirmation
+
+After successful authentication, the script displays the tenant and account information retrieved from Microsoft Graph.
+
+Users must explicitly confirm:
+
+- Tenant Name
+- Tenant ID
+- Signed In Account
+
+before continuing.
+
+This helps prevent accidental activation of privileged roles in the wrong tenant.
+
+![Tenant Confirmation](./images/ConfirmTenant.png)
+
+---
+
+### Previous Selections
+
+The script maintains a history of previous activations.
+
+History is stored at:
+
+```text
+$env:USERPROFILE\Documents\PIMRoleSelections.json
+```
+
+When a previous selection is chosen from the **Previous Selections** drop-down:
+
+- Selected roles are restored
+- Activation reason is restored
+- Activation duration is restored
+
+This allows commonly used role combinations to be reactivated quickly.
+
+---
+
+### Clear Selections
+
+The **Clear Selections** button resets:
+
+- Selected roles
+- Activation reason
+- Duration
+- Previous selection values
+
+without restarting the application.
+
+---
+
+## Requirements
+
+### PowerShell
+
+PowerShell 7.x is recommended.
+
+Verify version:
+
+```powershell
+$PSVersionTable.PSVersion
+```
+
+### Microsoft Graph PowerShell SDK
+
+Install Microsoft Graph:
+
+```powershell
+Install-Module Microsoft.Graph -Scope CurrentUser
+```
+
+### Required Microsoft Graph Permissions
+
+The script requires:
+
+```text
+RoleManagement.Read.Directory
+RoleManagement.ReadWrite.Directory
+User.Read
+```
+
+### Internet Connectivity
+
+Internet connectivity is required to connect to Microsoft Graph.
+
+### Script Execution Policy
+
+The execution policy must allow PowerShell scripts to run.
+
+Example:
+
+```powershell
+Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
+```
+
+---
+
+## Authentication Notes
+
+### Browser Authentication
+
+Uses:
+
+```powershell
+Connect-MgGraph
+```
+
+Recommended for:
+
+- Day-to-day administration
+- Single tenant environments
+- Users who have an active browser session
+
+### Device Code Authentication
+
+Uses:
+
+```powershell
+Connect-MgGraph -UseDeviceCode
+```
+
+Recommended for:
+
+- Multi-tenant administrators
+- Shared administration workstations
+- Situations where browser authentication selects the incorrect account
+
+Device Code authentication also disables Windows Authentication Manager (WAM) to provide a consistent sign-in experience.
+
+---
+
+## Troubleshooting
+
+### Authentication succeeds but Graph commands fail
+
+Disconnect from Microsoft Graph and reconnect:
+
+```powershell
+Disconnect-MgGraph
+```
+
+Then relaunch the script.
+
+### Incorrect Account Selected
+
+Choose:
+
+```text
+Device Code Authentication
+```
+
+during startup.
+
+Device Code authentication allows you to explicitly select the intended account and tenant.
+
+### Missing Roles
+
+Verify that:
+
+- The account has eligible PIM assignments
+- The account is authenticated to the correct tenant
+- Microsoft Graph consent has been granted
+
+---
+
+## Acknowledgements
+
+The loading screen implementation uses functionality provided by:
+
+Mentaleak (Zachary Fischer)
+
+GitHub Repository:
+
+https://github.com/VitalProject/Show-LoadingScreen
+
+## Version History
+
+### 0.5.4
+- Added Browser Authentication option
+- Added Device Code Authentication option
+- Added tenant confirmation dialog
+- Added account confirmation display
+- Improved Microsoft Graph authentication handling
+- Added Process-scoped Graph connections
+
+### 0.5.3
+- Added activation history
+- Added previous selections support
+- Added loading screen
